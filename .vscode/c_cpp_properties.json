@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "Linux-ARM64",
+            "includePath": [
+                  "${workspaceFolder}/**",
+        "/usr/src/linux-headers-6.12.47+rpt-common-rpi/include",
+        "/usr/src/linux-headers-6.12.47+rpt-common-rpi/include/linux",
+        "/usr/src/linux-headers-6.12.47+rpt-common-rpi/include/uapi",
+        "/usr/src/linux-headers-6.12.47+rpt-common-rpi/arch/arm64/include",
+        "/usr/src/linux-headers-6.12.47+rpt-common-rpi/include/asm-generic",
+        "/usr/src/linux-headers-6.12.47+rpt-common-rpi/arch/arm64/include",
+        "/usr/src/linux-headers-6.12.47+rpt-rpi-2712/arch/arm64/include/generated",               
+        "/usr/src/linux-headers-6.12.47+rpt-rpi-2712/include",    
+        "/usr/src/linux-headers-6.12.47+rpt-rpi-2712/arch/arm64/include",
+        "/usr/src/linux-headers-6.12.47+rpt-rpi-2712/arch/arm64/include/generated"
+            ],
+            "defines": [
+                "__KERNEL__",
+                "MODULE"
+            ],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-arm64"
+        }
+    ],
+    "version": 4
+}

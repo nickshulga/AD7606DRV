@@ -1,0 +1,93 @@
+/*
+compile: 
+ sudo dtc -@ -I dts -O dtb -o /boot/overlays/ad7606.dtbo ad7606-overlay.dts
+
+/boot/firmware/config.txt:
+
+ dtoverlay=ad7606
+ dtoverlay=pwm
+
+//----------------------------------------------------------------------------
+ mydriver.ko -> /lib/modules/6.12.47+rpt-rpi-2712/kernel/drivers/iio/adc
+# Копируем модуль в системную папку модулей
+sudo cp mydriver.ko /lib/modules/$(uname -r)/kernel/drivers/iio/adc/
+
+# Обновляем зависимости модулей
+sudo depmod -a
+
+# Проверяем, что модуль в системе
+modinfo mydriver
+
+*/
+
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2712";
+
+    // 1. Активируем PWM0
+    fragment@0 {
+        target = <&pwm0>;
+        __overlay__ {
+            status = "okay";
+        };
+    };
+
+    // 2. Создаем SPI устройство 
+    fragment@1 {        
+       target = <&spi0>;
+       //target-path = "/axi/pcie@1000120000/rp1/spi@50000";  
+        __overlay__ {
+            status = "okay";
+            #address-cells = <1>;
+            #size-cells = <0>;
+             
+            cs-gpios = <0>, <&gpio 8 1>;
+             //cs-gpios = <&gpio 8 1>;
+
+            ad7606@0 {
+                compatible = "ctp,ad7606";
+                //reg = <0>;  // Chip Select 0
+                reg = <0>;  // Chip Select 0
+                status = "okay";
+                
+                // PWM для CONVST
+                pwms = <&pwm0 2 10000000 0>;
+                pwm-names = "convst";
+                
+                // SPI параметры
+                spi-max-frequency = <25000000>;
+                spi-cpol;
+                spi-cpha;
+                spi-no-cs;  // Отключаем аппаратный CS
+                
+               // cs-gpios = <&gpio 8 1>;
+
+                // GPIO
+                busy-gpios = <&gpio 27 1>;
+                // convst-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
+            };
+        };
+    };
+};
+
+/*
+compile: 
+ sudo dtc -@ -I dts -O dtb -o /boot/overlays/ad7606.dtbo ad7606-overlay.dts
+
+/boot/firmware/config.txt:
+
+ dtoverlay=ad7606
+ dtoverlay=pwm
+
+
+ /----------------------------------------------------------------------------
+ mydriver.ko -> /lib/modules/6.12.47+rpt-rpi-2712/kernel/drivers/iio/adc
+# Копируем модуль в системную папку модулей
+sudo cp mydriver.ko /lib/modules/$(uname -r)/kernel/drivers/iio/adc/
+# Обновляем зависимости модулей
+sudo depmod -a
+# Проверяем, что модуль в системе
+modinfo mydriver
+*/

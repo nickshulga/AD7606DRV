@@ -1,0 +1,94 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2712";
+
+    // Активируем pwm0
+    fragment@0 {
+        target = <&pwm0>;
+        __overlay__ {
+            status = "okay";
+        };
+    };
+
+    // Создаем устройство
+    fragment@1 {
+        target-path = "/";
+        __overlay__ {
+            ad7606_driver {
+                compatible = "ctp,ad7606-pwm";
+                pwms = <&pwm0 2 10000000 0>;  // Просто контроллер и канал
+                pwm-names = "channel0";
+                status = "okay";
+                
+                busy-gpios = <&gpio 27 0>;                                
+                ctrl-gpios = <&gpio 17 0>;
+            };
+        };
+    };
+};
+// /dts-v1/;
+// /plugin/;
+
+// / {
+//   compatible = "brcm,bcm2712"; 
+
+    // // Фрагмент 0: Активация контроллера PWM0 и настройка пина 18 (ALT3)
+    // fragment@0 {
+    //     target = <&rp1_pwm0>; 
+    //     __overlay__ {
+    //         pinctrl-names = "default";
+    //         pinctrl-0 = <&mypwm_pins>;
+    //         status = "okay";
+    //     };
+    // };
+    
+    // fragment@1 {
+    //     target = <&rp1_pinctrl>; 
+    //     __overlay__ {
+    //         mypwm_pins: mypwm_pins {
+    //             pins = "gpio18";
+    //             function = "pwm0"; 
+    //         };
+    //     };
+    // };
+
+// fragment@2 
+// {
+//         target = <&soc>; 
+//         __overlay__ 
+//         {
+//             // Используем ваш новый узел и compatible-строку
+//             ad7606_driver: ad7606_driver 
+//             { // Метка ad7606_driver
+//                 compatible = "ctp,ad7606-pwm"; 
+
+//                 // Свойства, которые ищет pwm_get("channel0")
+//              //   pwms = <&rp1_pwm0 2 50000000>;
+//                 pwm-names = "channel0";
+//             };
+//         };
+//     };
+
+// };
+
+
+//     fragment@1 {
+//         target = <&pwm0>; 
+//         __overlay__ {
+//             pinctrl-names = "default";
+//             pinctrl-0 = <&mypwm_pins_chan2>; 
+//             status = "okay";
+//         };
+//     };
+    
+//     fragment@2 {
+//         target = <&pio>; 
+//         __overlay__ {
+//             mypwm_pins_chan2: mypwm_pins_chan2 {
+//                 pinctrl-single,pins = <18 3>; 
+//             };
+//         };
+//     };
+// };
